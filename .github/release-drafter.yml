@@ -1,33 +1,36 @@
-name: Build
+name-template: '$RESOLVED_VERSION'
+tag-template: '$RESOLVED_VERSION'
+template: |
+  # What's Changed
+  $CHANGES
+categories:
+  - title: Breaking
+    label: breaking
+  - title: New
+    label: enhancement
+  - title: Bug Fixes
+    label: bug
+  - title: Maintenance
+    label: maintenance
+  - title: Documentation
+    label: documentation
+  - title: Dependency Updates
+    label: dependencies
 
-on:
-  pull_request:
-    branches: [ master ]
+version-resolver:
+  major:
+    labels:
+      - breaking
+  minor:
+    labels:
+      - enhancement
+  patch:
+    labels:
+      - bug
+      - maintenance
+      - documentation
+      - dependencies
+      - security
 
-jobs:
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: DeLaGuardo/setup-graalvm@4.0
-        with:
-          graalvm: 21.3.0
-          java: java8
-
-      - uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-cache-${{ hashFiles('**/*.gradle') }}-${{ hashFiles('**/gradle.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-      - uses: actions/cache@v2
-        with:
-          path: ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradlew') }}
-          restore-keys: |
-            ${{ runner.os }}-gradlew-
-      - run: |
-          chmod +x gradlew
-          ./gradlew clean build
+exclude-labels:
+  - skip-changelog
