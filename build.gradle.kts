@@ -37,22 +37,45 @@ allprojects {
         from(sourceSets["main"].allSource)
     }
 
+    val javadocJar by tasks.creating(Jar::class) {
+        dependsOn("javadoc")
+        archiveClassifier.convention("")
+        archiveClassifier.set("javadoc")
+        archiveBaseName.set(projectName)
+        archiveVersion.set(null as String?)
+        archiveVersion.convention(null as String?)
+        from(tasks.javadoc)
+    }
+
     tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
         dependsOn(sourcesJar)
+        dependsOn(javadocJar)
         archiveClassifier.set(null as String?)
         archiveVersion.set(null as String?)
         archiveVersion.convention(null as String?)
         archiveBaseName.set(projectName)
+        relocate("com.cryptomorin.xseries", "com.gmail.furkanaxx34.dlibrary.xseries")
+        relocate("io.github.bananapuncher714.nbteditor", "com.gmail.furkanaxx34.dlibrary.nbteditor")
+        relocate("net.wesjd.anvilgui", "com.gmail.furkanaxx34.dlibrary.anvilgui")
+        relocate("org.yaml.snakeyaml", "com.gmail.furkanaxx34.dlibrary.snakeyaml")
     }
 
     tasks.withType<JavaCompile> {
         options.encoding = Charsets.UTF_8.name()
     }
 
+    tasks.withType<Javadoc> {
+        options.encoding = Charsets.UTF_8.name()
+        (options as StandardJavadocDocletOptions).tags("todo")
+    }
+
     repositories {
         mavenCentral()
         maven("https://jitpack.io/")
         mavenLocal()
+        maven("https://papermc.io/repo/repository/maven-public/")
+        maven("https://repo.codemc.org/repository/maven-public/")
+        maven("https://repo.codemc.org/repository/maven-snapshots")
     }
 }
 
