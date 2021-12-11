@@ -59,6 +59,12 @@ public abstract class BaseMenu extends TransformedObject {
 
     public final void openPage(@NotNull final Player player,
                                final int row,
+                               @NotNull final RpString title) {
+        this.openPage(player, row, Names.Strategy.HYPHEN_CASE.apply(this.getClass().getSimpleName()).toLowerCase(Locale.ROOT), title.build());
+    }
+
+    public final void openPage(@NotNull final Player player,
+                               final int row,
                                @NotNull final String id,
                                @NotNull final RpString title) {
         this.openPage(player, row, id, title.build());
