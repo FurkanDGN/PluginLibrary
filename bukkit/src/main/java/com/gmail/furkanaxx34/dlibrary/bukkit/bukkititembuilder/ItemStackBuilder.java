@@ -65,7 +65,7 @@ public final class ItemStackBuilder extends Builder<ItemStackBuilder, ItemMeta> 
    */
   @NotNull
   public static ItemStackBuilder from(@NotNull final XMaterial material) {
-    final Material parsed = material.parseMaterial();
+    final ItemStack parsed = material.parseItem();
     if (parsed == null) {
       throw new IllegalStateException(String.format("Material from the %s cannot be null!",
         material.name()));
