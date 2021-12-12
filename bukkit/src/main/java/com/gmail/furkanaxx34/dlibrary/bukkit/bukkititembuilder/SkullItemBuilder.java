@@ -1,6 +1,8 @@
 package com.gmail.furkanaxx34.dlibrary.bukkit.bukkititembuilder;
 
 import com.cryptomorin.xseries.SkullUtils;
+import com.gmail.furkanaxx34.dlibrary.bukkit.utils.Versions;
+import com.gmail.furkanaxx34.dlibrary.reflection.RefMethod;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
@@ -114,17 +116,22 @@ public final class SkullItemBuilder extends Builder<SkullItemBuilder, SkullMeta>
     SkullUtils.applySkin(this.getItemMeta(), texture);
     final ClassOf<SkullMeta> cls = new ClassOf<>(this.getItemMeta());
     final Object profile = cls.getField("profile")
-      .flatMap(refField -> refField.of(this.getItemMeta()).getValue())
-      .orElseThrow(null);
+            .flatMap(refField -> refField.of(this.getItemMeta()).getValue())
+            .orElseThrow(() -> new RuntimeException("profile"));
     final Object nbt = new ClassOf<>(Objects.requireNonNull(ReflectionUtils.getNMSClass("NBTTagCompound"))).getConstructor()
-      .flatMap(RefConstructed::create)
-      .orElseThrow(null);
+            .flatMap(RefConstructed::create)
+            .orElseThrow(() -> new RuntimeException("nbt"));
     final Object serialized = new ClassOf<>(Objects.requireNonNull(ReflectionUtils.getNMSClass("GameProfileSerializer"))).getMethodByName("serialize")
-      .flatMap(refMethod -> refMethod.call(nbt, profile))
-      .orElseThrow(null);
-    cls.getField("serializedProfile")
-      .map(refField -> refField.of(this.getItemMeta()))
-      .ifPresent(refFieldExecuted -> refFieldExecuted.setValue(serialized));
+            .flatMap(refMethod -> refMethod.call(nbt, profile))
+            .orElseThrow(() -> new RuntimeException("serialize"));
+    if (Versions.MINOR > 15 || (Versions.MINOR_CRAFT == 15 && Versions.MICRO_CRAFT == 2)) {
+      cls.getField("serializedProfile")
+              .map(refField -> refField.of(this.getItemMeta()))
+              .ifPresent(refFieldExecuted -> refFieldExecuted.setValue(serialized));
+    } else {
+      final RefMethod applyToItem = cls.getMethod("applyToItem", nbt).orElseThrow(() -> new RuntimeException("applyToItem"));
+      applyToItem.of(this.getItemMeta()).call(nbt);
+    }
     return this.getSelf();
   }
 

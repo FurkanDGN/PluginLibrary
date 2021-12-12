@@ -19,6 +19,7 @@ allprojects {
     }
 
     group = "com.gmail.furkanaxx34"
+    version = findProperty("projectVersion") as String? ?: "1.0.0";
 
     java {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -67,6 +68,42 @@ allprojects {
     tasks.withType<Javadoc> {
         options.encoding = Charsets.UTF_8.name()
         (options as StandardJavadocDocletOptions).tags("todo")
+    }
+
+    publishing {
+        publications {
+            create<MavenPublication>("mavenJava") {
+                groupId = project.group.toString()
+                artifactId = projectName
+                version = project.version.toString()
+
+                project.shadow.component(this)
+                artifact(tasks["sourcesJar"])
+                artifact(tasks["javadocJar"])
+                pom {
+                    name.set("Dantero Plugin Library")
+                    description.set("Dantero plugin library.")
+                    licenses {
+                        license {
+                            name.set("MIT License")
+                            url.set("https://mit-license.org/license.txt")
+                        }
+                    }
+                    developers {
+                        developer {
+                            id.set("Dantero")
+                            name.set("Furkan Doğan")
+                            email.set("furkanaxx34@gmail.com")
+                        }
+                    }
+                    scm {
+                        connection.set("scm:git:git://github.com/FurkanDGN/PluginLibrary.git")
+                        developerConnection.set("scm:git:ssh://github.com/FurkanDGN/PluginLibrary.git")
+                        url.set("https://github.com/FurkanDGN/PluginLibrary")
+                    }
+                }
+            }
+        }
     }
 
     repositories {
