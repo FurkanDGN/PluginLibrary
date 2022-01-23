@@ -5,6 +5,7 @@ import java.util.HashMap;
 import lombok.var;
 import org.bukkit.entity.Player;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class CooldownUtil {
 
   private static final HashMap<String, Long> countdown = new HashMap<>();
