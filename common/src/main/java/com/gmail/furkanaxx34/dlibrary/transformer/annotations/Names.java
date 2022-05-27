@@ -105,7 +105,7 @@ public @interface Names {
      */
     Strategy(@NotNull final String replacement, @NotNull final String regex) {
       this.replacement = replacement;
-      this.pattern = Pattern.compile(regex);
+        this.pattern = Pattern.compile(regex);
     }
 
     @Override

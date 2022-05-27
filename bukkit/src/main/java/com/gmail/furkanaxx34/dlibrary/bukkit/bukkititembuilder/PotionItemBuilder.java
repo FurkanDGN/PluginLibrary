@@ -112,7 +112,9 @@ public final class PotionItemBuilder extends Builder<PotionItemBuilder, PotionMe
   public PotionItemBuilder addCustomEffects(@NotNull final Collection<String> effects, final boolean overwrite) {
     if (Builder.VERSION >= 9) {
       effects.stream()
-        .map(XPotion::parsePotionEffectFromString)
+        .map(XPotion::parseEffect)
+        .filter(Objects::nonNull)
+        .map(XPotion.Effect::getEffect)
         .filter(Objects::nonNull)
         .forEach(effect -> this.addCustomEffect(effect, overwrite));
     }

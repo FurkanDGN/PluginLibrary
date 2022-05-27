@@ -124,7 +124,7 @@ public final class SkullItemBuilder extends Builder<SkullItemBuilder, SkullMeta>
     final Object serialized = new ClassOf<>(Objects.requireNonNull(ReflectionUtils.getNMSClass("GameProfileSerializer"))).getMethodByName("serialize")
             .flatMap(refMethod -> refMethod.call(nbt, profile))
             .orElseThrow(() -> new RuntimeException("serialize"));
-    if (Versions.MINOR > 15 || (Versions.MINOR_CRAFT == 15 && Versions.MICRO_CRAFT == 2)) {
+    if (Versions.MINOR > 15 || (Versions.MINOR == 15 && Versions.MICRO == 2)) {
       cls.getField("serializedProfile")
               .map(refField -> refField.of(this.getItemMeta()))
               .ifPresent(refFieldExecuted -> refFieldExecuted.setValue(serialized));

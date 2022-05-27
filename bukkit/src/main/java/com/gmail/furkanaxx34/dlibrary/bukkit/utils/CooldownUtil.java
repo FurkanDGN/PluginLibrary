@@ -19,8 +19,8 @@ public class CooldownUtil {
     }
     final var timeMillis = countdown.get(key);
     if (now >= timeMillis) {
-      countdown.remove(key);
-      return false;
+      countdown.put(key, now + delay);
+      return true;
     }
     return false;
   }

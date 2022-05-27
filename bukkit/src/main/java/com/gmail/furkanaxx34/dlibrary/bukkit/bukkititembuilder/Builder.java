@@ -186,7 +186,7 @@ public abstract class Builder<X extends Builder<X, T>, T extends ItemMeta> imple
    */
   @NotNull
   public final X addEnchantments(@NotNull final XEnchantment enchantment, final int level) {
-    return Optional.ofNullable(enchantment.parseEnchantment())
+    return Optional.ofNullable(enchantment.getEnchant())
       .map(value -> this.addEnchantments(value, level))
       .orElse(this.getSelf());
   }
@@ -368,7 +368,7 @@ public abstract class Builder<X extends Builder<X, T>, T extends ItemMeta> imple
   public final X addSerializedEnchantments(@NotNull final Map<String, Integer> enchantments) {
     enchantments.forEach((enchantmentString, level) ->
       XEnchantment.matchXEnchantment(String.valueOf(enchantmentString))
-        .flatMap(enchant -> Optional.ofNullable(enchant.parseEnchantment()))
+        .flatMap(enchant -> Optional.ofNullable(enchant.getEnchant()))
         .ifPresent(enchantment -> this.addEnchantments(enchantment, level)));
     return this.getSelf();
   }

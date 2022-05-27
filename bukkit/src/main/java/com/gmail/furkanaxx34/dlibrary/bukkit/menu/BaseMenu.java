@@ -40,19 +40,19 @@ public abstract class BaseMenu extends TransformedObject {
                 plugin.getDataFolder().mkdirs();
             }
             this.instance = TransformerPool.create(this)
-                    .withFile(new File(
-                            plugin.getDataFolder(),
-                            String.format(
-                                    "%s.yml",
-                                    Names.Strategy.HYPHEN_CASE.apply(this.getClass().getSimpleName()).toLowerCase(Locale.ROOT)))
-                    )
-                    .withResolver(new BukkitSnakeyaml())
-                    .withTransformPack(registry -> registry
-                            .withSerializers(
-                                    new SentTitle.Serializer(),
-                                    new FileElement.Serializer(),
-                                    new ItemStackSerializer()
-                            ));
+              .withFile(new File(
+                plugin.getDataFolder(),
+                String.format(
+                  "%s.yml",
+                  Names.Strategy.HYPHEN_CASE.apply(this.getClass().getSimpleName()).toLowerCase(Locale.ROOT)))
+              )
+              .withResolver(new BukkitSnakeyaml())
+              .withTransformPack(registry -> registry
+                .withSerializers(
+                  new SentTitle.Serializer(),
+                  new FileElement.Serializer(),
+                  new ItemStackSerializer()
+                ));
         }
         this.instance.initiate();
     }
@@ -60,21 +60,44 @@ public abstract class BaseMenu extends TransformedObject {
     public final void openPage(@NotNull final Player player,
                                final int row,
                                @NotNull final RpString title) {
-        this.openPage(player, row, Names.Strategy.HYPHEN_CASE.apply(this.getClass().getSimpleName()).toLowerCase(Locale.ROOT), title.build());
+        this.openPage(player, row, title, false);
+    }
+
+    public final void openPage(@NotNull final Player player,
+                               final int row,
+                               @NotNull final RpString title,
+                               boolean async) {
+        this.openPage(player, row, Names.Strategy.HYPHEN_CASE.apply(this.getClass().getSimpleName()).toLowerCase(Locale.ROOT), title.build(), async);
     }
 
     public final void openPage(@NotNull final Player player,
                                final int row,
                                @NotNull final RpString title,
                                @Nullable final InventoryProvider provider) {
-        this.openPage(player, row, Names.Strategy.HYPHEN_CASE.apply(this.getClass().getSimpleName()).toLowerCase(Locale.ROOT), title.build(), null,null, null, provider);
+        this.openPage(player, row, title, provider, false);
+    }
+
+    public final void openPage(@NotNull final Player player,
+                               final int row,
+                               @NotNull final RpString title,
+                               @Nullable final InventoryProvider provider,
+                               boolean async) {
+        this.openPage(player, row, Names.Strategy.HYPHEN_CASE.apply(this.getClass().getSimpleName()).toLowerCase(Locale.ROOT), title.build(), null, null, null, provider, async);
     }
 
     public final void openPage(@NotNull final Player player,
                                final int row,
                                @NotNull final String id,
                                @NotNull final RpString title) {
-        this.openPage(player, row, id, title.build());
+        this.openPage(player, row, id, title, false);
+    }
+
+    public final void openPage(@NotNull final Player player,
+                               final int row,
+                               @NotNull final String id,
+                               @NotNull final RpString title,
+                               boolean async) {
+        this.openPage(player, row, id, title.build(), async);
     }
 
     public final void openPage(@NotNull final Player player,
@@ -82,11 +105,24 @@ public abstract class BaseMenu extends TransformedObject {
                                @NotNull final String id,
                                @NotNull final RpString title,
                                @Nullable final InventoryProvider provider) {
-        this.openPage(player, row, id, title.build(), null,null, null, provider);
+        this.openPage(player, row, id, title, provider, false);
+    }
+
+    public final void openPage(@NotNull final Player player,
+                               final int row,
+                               @NotNull final String id,
+                               @NotNull final RpString title,
+                               @Nullable final InventoryProvider provider,
+                               boolean async) {
+        this.openPage(player, row, id, title.build(), null, null, null, provider, async);
     }
 
     public void openPage(final Player player, final int row, final String id, final String title) {
-        this.openPage(player, row, id, title, null,null, null, null);
+        this.openPage(player, row, id, title, false);
+    }
+
+    public void openPage(final Player player, final int row, final String id, final String title, boolean async) {
+        this.openPage(player, row, id, title, null, null, null, null, async);
     }
 
     public final void openPage(@NotNull final Player player,
@@ -94,7 +130,16 @@ public abstract class BaseMenu extends TransformedObject {
                                @NotNull final String id,
                                @NotNull final RpString title,
                                @Nullable final Consumer<InitEvent> initConsumer) {
-        this.openPage(player, row, id, title.build(), initConsumer, null, null, null);
+        this.openPage(player, row, id, title, initConsumer, false);
+    }
+
+    public final void openPage(@NotNull final Player player,
+                               final int row,
+                               @NotNull final String id,
+                               @NotNull final RpString title,
+                               @Nullable final Consumer<InitEvent> initConsumer,
+                               boolean async) {
+        this.openPage(player, row, id, title.build(), initConsumer, null, null, null, async);
     }
 
     public final void openPage(@NotNull final Player player,
@@ -103,7 +148,17 @@ public abstract class BaseMenu extends TransformedObject {
                                @NotNull final RpString title,
                                @Nullable final Consumer<InitEvent> initConsumer,
                                @Nullable final Consumer<TickEvent> tickConsumer) {
-        this.openPage(player, row, id, title.build(), initConsumer, tickConsumer, null, null);
+        this.openPage(player, row, id, title, initConsumer, tickConsumer, false);
+    }
+
+    public final void openPage(@NotNull final Player player,
+                               final int row,
+                               @NotNull final String id,
+                               @NotNull final RpString title,
+                               @Nullable final Consumer<InitEvent> initConsumer,
+                               @Nullable final Consumer<TickEvent> tickConsumer,
+                               boolean async) {
+        this.openPage(player, row, id, title.build(), initConsumer, tickConsumer, null, null, async);
     }
 
     public final void openPage(@NotNull final Player player,
@@ -114,10 +169,23 @@ public abstract class BaseMenu extends TransformedObject {
                                @Nullable final Consumer<TickEvent> tickConsumer,
                                @Nullable final Consumer<CloseEvent> closeConsumer,
                                @Nullable final InventoryProvider provider) {
+        this.openPage(player, row, id, title, initConsumer, tickConsumer, closeConsumer, provider, false);
+    }
+
+    public final void openPage(@NotNull final Player player,
+                               final int row,
+                               @NotNull final String id,
+                               @NotNull final String title,
+                               @Nullable final Consumer<InitEvent> initConsumer,
+                               @Nullable final Consumer<TickEvent> tickConsumer,
+                               @Nullable final Consumer<CloseEvent> closeConsumer,
+                               @Nullable final InventoryProvider provider,
+                               boolean async) {
         final Page page = Page.build(DLibrary.getInventory())
-                .title(Versions.MINOR <= 8 ? StringUtil.subString32(title) : title)
-                .row(row)
-                .id(id);
+          .title(Versions.MINOR <= 8 ? StringUtil.subString32(title) : title)
+          .row(row)
+          .id(id)
+          .async(async);
 
         if (provider != null)
             page.provider(provider);
