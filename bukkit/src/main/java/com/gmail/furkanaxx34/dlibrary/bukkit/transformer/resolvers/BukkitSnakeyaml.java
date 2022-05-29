@@ -187,7 +187,7 @@ public final class BukkitSnakeyaml extends TransformResolver {
           if (fieldComment == null) {
             return line;
           }
-          return PostProcessor.addIndent(
+          return '\n' + PostProcessor.addIndent(
             PostProcessor.createComment(BukkitSnakeyaml.this.commentPrefix, fieldComment.value()),
             lineInfo.getIndent()) + line;
         }

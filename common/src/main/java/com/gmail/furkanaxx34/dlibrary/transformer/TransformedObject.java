@@ -1,5 +1,6 @@
 package com.gmail.furkanaxx34.dlibrary.transformer;
 
+import com.gmail.furkanaxx34.dlibrary.transformer.declarations.FieldDeclaration;
 import lombok.Getter;
 import lombok.var;
 import org.jetbrains.annotations.NotNull;
@@ -661,20 +662,25 @@ public abstract class TransformedObject {
   public final TransformedObject save(@NotNull final OutputStream outputStream) throws TransformException {
     Objects.requireNonNull(this.declaration, "declaration");
     Objects.requireNonNull(this.resolver, "resolver");
-    this.declaration.getNonMigratedFields().forEach((key, fieldDeclaration) -> {
-      final var path = fieldDeclaration.getPath();
-      final var fieldValue = fieldDeclaration.getValue();
-      if (!this.resolver.isValid(fieldDeclaration, fieldValue)) {
-        throw new TransformException(String.format("%s marked %s as invalid without throwing an exception",
-          this.resolver.getClass(), path));
-      }
-      try {
-        this.resolver.setValue(path, fieldValue, fieldDeclaration.getGenericDeclaration(), fieldDeclaration);
-      } catch (final Exception exception) {
-        throw new TransformException(String.format("Failed to use #setValue(%s, %s, %s, %s)",
-          path, fieldValue, fieldDeclaration.getGenericDeclaration(), fieldDeclaration), exception);
-      }
-    });
+    this.declaration.getNonMigratedFields()
+      .entrySet()
+      .stream()
+      .sorted((o1, o2) -> o2.getKey().compareTo(o1.getKey()))
+      .forEach(entry -> {
+        FieldDeclaration fieldDeclaration = entry.getValue();
+        final var path = fieldDeclaration.getPath();
+        final var fieldValue = fieldDeclaration.getValue();
+        if (!this.resolver.isValid(fieldDeclaration, fieldValue)) {
+          throw new TransformException(String.format("%s marked %s as invalid without throwing an exception",
+            this.resolver.getClass(), path));
+        }
+        try {
+          this.resolver.setValue(path, fieldValue, fieldDeclaration.getGenericDeclaration(), fieldDeclaration);
+        } catch (final Exception exception) {
+          throw new TransformException(String.format("Failed to use #setValue(%s, %s, %s, %s)",
+            path, fieldValue, fieldDeclaration.getGenericDeclaration(), fieldDeclaration), exception);
+        }
+      });
     try {
       this.resolver.write(outputStream, this.declaration);
     } catch (final Exception exception) {
