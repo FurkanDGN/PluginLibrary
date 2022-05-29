@@ -192,6 +192,29 @@ public interface InventoryContents {
   }
 
   /**
+   * fills the empty slots of the inventory with the given item.
+   *
+   * @param row the row to fill.
+   * @param item the item to fill.
+   *
+   * @return {@code this}, for chained calls.
+   */
+  @NotNull
+  default InventoryContents fillEmpties(int row, @NotNull final Icon item) {
+    final var all = this.all();
+    if (row < 0 || row >= all.length) {
+      return this;
+    }
+    IntStream.range(0, all[row].length).forEach(column -> {
+      final var icon = all[row][column];
+      if (icon == null || icon.getItem().getType() == Material.AIR) {
+        this.set(row, column, item);
+      }
+    });
+    return this;
+  }
+
+  /**
    * fills the inventory with the given {@link Pattern}.
    * <p>
    * the pattern will start at the first slot.
