@@ -697,6 +697,13 @@ public final class FileElement {
   }
 
   @NotNull
+  public FileElement changeAmount(final int amount) {
+    return this.changeItemStack(ItemStackBuilder.from(this.getItemStack())
+      .setAmount(amount)
+      .getItemStack());
+  }
+
+  @NotNull
   public FileElement changeType(@NotNull final PlaceType type) {
     return this.duplicate(type);
   }
@@ -801,7 +808,23 @@ public final class FileElement {
     @Override
     public Optional<FileElement> deserialize(@NotNull final TransformedData transformedData,
                                              @Nullable final GenericDeclaration declaration) {
-      return Optional.empty();
+      final var itemStack = transformedData.get("item", ItemStack.class);
+      if (!itemStack.isPresent()) {
+        return Optional.empty();
+      }
+      final var type = transformedData.get("type", String.class);
+      if (!type.isPresent()) {
+        return Optional.empty();
+      }
+      final var deserializer = PlaceType.getByType(type.get());
+      if (!deserializer.isPresent()) {
+        return Optional.empty();
+      }
+      final var placeType = deserializer.get().deserialize(transformedData);
+      if (!placeType.isPresent()) {
+        return Optional.empty();
+      }
+      return Optional.of(FileElement.from(itemStack.get(), placeType.get()));
     }
 
     @NotNull
@@ -839,5 +862,14 @@ public final class FileElement {
     public boolean supports(@NotNull final Class<?> cls) {
       return cls == FileElement.class;
     }
+  }
+
+  @Override
+  public String toString() {
+    return "FileElement{" +
+      "events=" + events +
+      ", itemStack=" + itemStack +
+      ", placeType=" + placeType +
+      '}';
   }
 }

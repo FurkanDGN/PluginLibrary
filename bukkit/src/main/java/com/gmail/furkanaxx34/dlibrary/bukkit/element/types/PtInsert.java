@@ -59,4 +59,12 @@ public final class PtInsert implements PlaceType {
         .map(PtInsert::create);
     }
   }
+
+  @Override
+  public String toString() {
+    return "PtInsert{" +
+      "column=" + this.column +
+      ", row=" + this.row +
+      '}';
+  }
 }

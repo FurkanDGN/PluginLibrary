@@ -1,0 +1,4 @@
+name: DLibrary
+main: com.gmail.furkanaxx34.dlibrary.bukkit.DLibraryPlugin
+version: 1.0
+api-version: 1.12

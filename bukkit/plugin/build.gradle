@@ -1,0 +1,5 @@
+dependencies {
+    implementation(project(":bukkit"))
+    compileOnly("org.bukkit:bukkit:1.14.4-R0.1-SNAPSHOT")
+    compileOnly("com.github.cryptomorin:XSeries:8.7.1")
+}

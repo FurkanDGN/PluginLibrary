@@ -1,5 +1,6 @@
 package com.gmail.furkanaxx34.dlibrary.bukkit.smartinventory;
 
+import com.gmail.furkanaxx34.dlibrary.bukkit.smartinventory.page.AnvilPage;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
@@ -39,6 +40,10 @@ public interface Page {
    */
   static Page build(@NotNull final SmartInventory inventory) {
     return new BasicPage(inventory);
+  }
+
+  static Page buildAnvilPage(@NotNull final SmartInventory inventory) {
+    return new AnvilPage(inventory);
   }
 
   /**

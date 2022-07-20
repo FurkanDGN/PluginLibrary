@@ -43,7 +43,7 @@ public abstract class BaseMenu extends TransformedObject {
               .withFile(new File(
                 plugin.getDataFolder(),
                 String.format(
-                  "%s.yml",
+                  "menus/%s.yml",
                   Names.Strategy.HYPHEN_CASE.apply(this.getClass().getSimpleName()).toLowerCase(Locale.ROOT)))
               )
               .withResolver(new BukkitSnakeyaml())
@@ -218,7 +218,6 @@ public abstract class BaseMenu extends TransformedObject {
     }
 
     private void preparePage(final Page page) {
-        this.placeElements(page, this.getClass().getFields());
         page.whenEmptyClick(event -> {
             var clicked = event.getEvent().getClickedInventory();
             var playerInv = event.getEvent().getWhoClicked().getInventory();

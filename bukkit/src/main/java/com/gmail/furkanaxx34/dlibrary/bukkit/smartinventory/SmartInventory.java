@@ -1,5 +1,6 @@
 package com.gmail.furkanaxx34.dlibrary.bukkit.smartinventory;
 
+import com.gmail.furkanaxx34.dlibrary.bukkit.smartinventory.opener.AnvilInventoryOpener;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -26,8 +27,10 @@ public interface SmartInventory {
   /**
    * default inventory openers.
    */
-  List<InventoryOpener> DEFAULT_OPENERS = Collections.singletonList(
-    new ChestInventoryOpener());
+  List<InventoryOpener> DEFAULT_OPENERS = Arrays.asList(
+    new ChestInventoryOpener(),
+    new AnvilInventoryOpener()
+  );
 
   /**
    * all listener to register.

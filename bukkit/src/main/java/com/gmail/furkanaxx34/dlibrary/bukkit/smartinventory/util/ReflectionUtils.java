@@ -207,6 +207,24 @@ public final class ReflectionUtils {
   }
 
   /**
+   * Get a class.
+   *
+   * @param classPath the path of the class.
+   *
+   * @return the class or null if not found.
+   * @since 1.0.0
+   */
+  @Nullable
+  public static Class<?> getClass(@NotNull String classPath) {
+    try {
+      return Class.forName(classPath);
+    } catch (ClassNotFoundException ex) {
+      ex.printStackTrace();
+      return null;
+    }
+  }
+
+  /**
    * Sends a packet to the player asynchronously if they're online.
    * Packets are thread-safe.
    *
